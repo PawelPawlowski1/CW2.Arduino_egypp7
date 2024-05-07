@@ -1,4 +1,4 @@
-%% Pawel J Pawlowski
+%% Pawel J Pawlowski 20470455
 % egypp7@nottingham.ac.uk
 
 %% Preliminary Task
@@ -222,10 +222,10 @@ end
 
 %function Doc_Temp_Control
 
- text = sprintf("The Function 'Temp_Monitor' records temperature data and plots it in real-time.\nA TO-92 Thermistor is used to collect the temperature data by reading the temperature dependant voltage\n" + ...
+ %text = sprintf("The Function 'Temp_Monitor' records temperature data and plots it in real-time.\nA TO-92 Thermistor is used to collect the temperature data by reading the temperature dependant voltage\n" + ...
     "and using it to calculate the indicated cabin temperature, the data is stored and depending on its value 1 of 3 coloured LED's will activate,\nGreen if the temperature is within acceptable limits(18<=T<=24°C), Flashing Amber if it is too low(T<18°C)\n and rapidly flashing Red if it is too hot (T>24°C)\n" + ...
     "The function provides a visual representation of temperature variations over time, allowing users to monitor temperature trends and make informed decisions based on the data.\n\n");
-disp(text);
+%disp(text);
 
 %end
 
@@ -308,7 +308,25 @@ disp(TEXT);
 
 end
 
-%%
+%% Task 4: Reflective Statement
+
+% During the development of CW2 i encountered challenges that prompted me
+% to reflect on my coding practices and problem solving skills, whilst Task
+% 1 and 2 weren't particulary challenging, i did find myself having to look
+% up and recall how to properly extract data from vectors and format
+% graphs, the main challenge at this stage was more to do with incorrect
+% wiring of the arduino kit, for example i would pick the wrong channel
+% when using the "readVolage" function resulting in incorrect temperatures
+% being dispalyed. On the other hand Task 3 the main hurdle was debbuging
+% the code, through careful analysis and experimentation i gained a deeper
+% understanding of debugging and optimzing code and learned how to approach
+% problems systematically.
+
+% To improve the code in the future i would increase the sample interval
+% for the temperature prediction (task 3) and add a better smoothing
+% function to remove irregular temperature changes, although the function
+% technically works it is very sensitive and even small short term
+% temperature changes result in unlikely predictions 
 
 
 
