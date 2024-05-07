@@ -229,6 +229,86 @@ disp(text);
 
 %end
 
+%% TASK 3 – ALGORITHMS – TEMPERATURE PREDICTION [25 MARKS]
+
+clear
+clear a
+a = arduino;
+time = 0;
+
+% To achieve this task, we need to calculate the rate of change of temperature over time, 
+% which is the derivative of the temperature data
+
+%function temp_prediction
+
+clear a
+a = arduino;
+time = 0;
+
+% Specify time program runs for (helps with calculating Change Rate)
+while time < 1000
+
+    time = time + 1;
+    writeDigitalPin(a,'D13',1)
+    Volt = readVoltage(a,"A5");
+    temp(time) = (Volt - 0.5)/0.01;
+    pause(1)
+    
+    % Starts calculating Change rate of temperature once there are atleast
+    % 2 recorded data points
+    if time > 2
+        % Calculating Temperature Change
+        ChangeR(time) = temp(time) - temp(time-1);
+        % smoothing out sudden temperature spikes
+        Smoothed_ChangeR = movmean(ChangeR,10);
+        % Taking an average
+        Avg_ChangeR = mean(Smoothed_ChangeR);
+
+         % Displaying Temperature change rate
+        fprintf('The Temperature is %.2f & The Average Temperature Rate of change is %.2f °C/sec\n',temp(time),Avg_ChangeR)
+
+        pred_Temp = temp(time) + (Avg_ChangeR * 300);
+        fprintf('The Temperature will be %.2f C in 5 minutes.\n\n',pred_Temp)
+        pause(1)
+
+        PerMin = (Avg_ChangeR * 60);
+         
+        % If TempR/min is greater than 4 Red light activates
+        if PerMin > 4
+
+            writeDigitalPin(a,'D10',0);
+            writeDigitalPin(a,'D9',0);
+            writeDigitalPin(a,'D11',1);
+
+        elseif PerMin < -4
+            % if TempR/min greater than -4 amber light shows
+
+            writeDigitalPin(a,'D11',0);
+            writeDigitalPin(a,'D9',0);
+            writeDigitalPin(a,'D10',1);
+
+        elseif  (24>= temp(time)) && (18<=temp(time))
+           
+            writeDigitalPin(a,'D9',1);
+        end
+
+    end
+end
+
+% Works but the equipment is very sensitive, fix ??
+
+%% TASK 3 PART e:
+
+function Doc_Temp_Prediction
+
+ TEXT = sprintf(['The function "temp_prediction" Calculates the rate of change of temperature each second.\nIt then calculates a temperature prediction in the next 5 minutes\nbased on the rate of change ' ...
+     'of temperature/sec.\n If the temperature is kept within a comfortable range between 18 deg C < temperature <24 deg C a constant green light will show.\n Alternatively if the rate of change of temperature/min is greater than\n+4deg C' ...
+     ' a constant red light will show and if the rate of change of temperature/ min is less than -4deg/ min a constant amber light will show.\n\n ']);
+disp(TEXT);
+
+end
+
+%%
 
 
 
