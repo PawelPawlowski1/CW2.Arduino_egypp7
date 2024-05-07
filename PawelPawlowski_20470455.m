@@ -137,5 +137,99 @@ fprintf(fileID,'Max Temperature\t%.2f C\nMin Temperature\t%.2f C\nAverage Temper
 % Close the file
 fclose(fileID);
 
+%% TASK 2 - LED TEMPERATURE MONITORING DEVICE IMPLEMENTATION [25 MARKS]
+
+% Part A, no actual code- picture of setup
+
+%%  Task 2 Part b:
+
+
+% Temperature Monitoring, part b is a flowchart showing the logic of the
+% function
+
+%%  Task 2 Part C:
+
+clear
+clear a;
+
+a = arduino;
+Time = 0;
+
+%function Therm_Monitor
+
+while true
+      Time = Time + 1; % Measures elapsed time (for graph)
+    % Sets pin powering Thermistor to High 
+    writeDigitalPin(a, 'D13',1);
+   % Reads the temperature dependant voltage and displays it alongside the
+   % indicated temperature
+    Therm_Voltage = readVoltage(a,"A5");
+   fprintf('The Voltage is : %.2f V\n',Therm_Voltage)
+   Therm_Temperature = (Therm_Voltage - 0.5)/0.01;
+   fprintf('The Temperature is %.2f C\n\n',Therm_Temperature)
+   pause(1)
+
+     % Part D of Task 2 integrated into Part C
+ TemperatureData = Therm_Temperature;
+Elapsed_Time = Time;
+
+% plots temperature vs time on a live graph
+plot(Elapsed_Time,TemperatureData,'rx')
+hold on
+xlabel("Elapsed Time (sec)")
+ylabel("Cabin Temperature (° C)")
+grid on
+% Apply axis limits on y axis (to better visaulize the temperature change)
+ylim([0,50])
+
+if       (24>=Therm_Temperature) && (18<=Therm_Temperature )
+        % Turns on Green LED (Temperature is within acceptable bounds)
+        writeDigitalPin(a, 'D9',1);
+         %Deactivates Amber or Red light (if previously on) (D10 is amber)
+        writeDigitalPin(a, 'D10',0);
+          writeDigitalPin(a, 'D11',0);
+
+    elseif Therm_Temperature < 18
+        % deactivates other lights (if they where on) and flashes amber
+        % light (too cold)
+        writeDigitalPin(a, 'D9',0);
+         writeDigitalPin(a, 'D11',0);
+
+          % makes Amber LED flash at 0.5 second intervals
+          writeDigitalPin(a, 'D10',1);
+          pause(0.5)
+           writeDigitalPin(a, 'D10',0);
+         
+         
+    elseif Therm_Temperature > 24
+        %  % deactivates other lights (if they where on) and Rapidly
+        %  Flashes Red light (too Hot)
+
+          writeDigitalPin(a, 'D9',0);
+           writeDigitalPin(a, 'D10',0);
+          
+           % Turns on red LED
+          writeDigitalPin(a, 'D11',1);
+          pause(0.25)
+          writeDigitalPin(a, 'D11',0);
+end
+end
+
+%% Task 2 part g:
+
+% Would not allow to run next section if function wasnt disabled with %,
+% remove % to use function
+
+%function Doc_Temp_Control
+
+ text = sprintf("The Function 'Temp_Monitor' records temperature data and plots it in real-time.\nA TO-92 Thermistor is used to collect the temperature data by reading the temperature dependant voltage\n" + ...
+    "and using it to calculate the indicated cabin temperature, the data is stored and depending on its value 1 of 3 coloured LED's will activate,\nGreen if the temperature is within acceptable limits(18<=T<=24°C), Flashing Amber if it is too low(T<18°C)\n and rapidly flashing Red if it is too hot (T>24°C)\n" + ...
+    "The function provides a visual representation of temperature variations over time, allowing users to monitor temperature trends and make informed decisions based on the data.\n\n");
+disp(text);
+
+%end
+
+
+
 
 
